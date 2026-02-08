@@ -26,7 +26,32 @@ Custom skill to delegate tasks to OpenAI Codex CLI.
 
 ## Codex CLI
 
-_TODO: Add Codex CLI setup notes here._
+### Install GitHub Skills (from `openai/skills`)
+
+```bash
+python ~/.codex/skills/.system/skill-installer/scripts/list-skills.py
+
+python ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
+  --repo openai/skills \
+  --path skills/.curated/gh-address-comments skills/.curated/gh-fix-ci
+```
+
+Restart Codex after installing skills.
+
+### Add GitHub MCP Server
+
+```bash
+codex mcp add github \
+  --url https://api.githubcopilot.com/mcp/ \
+  --bearer-token-env-var GITHUB_TOKEN
+```
+
+### Verify MCP Configuration
+
+```bash
+codex mcp list
+codex mcp get github
+```
 
 ## MCP Servers
 
