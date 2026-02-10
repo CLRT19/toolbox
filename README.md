@@ -7,6 +7,7 @@ A collection of scripts, configs, and setup guides for quickly bootstrapping a n
 | Directory | Description |
 |-----------|-------------|
 | [code-command-ssh](code-command-ssh/) | VS Code Remote-SSH `code` wrapper — run `code .` from any SSH terminal to open files in your local VS Code |
+| [antigravity-coredump-fix](antigravity-coredump-fix/) | Fix for Antigravity core dump crashes on SSH remote clusters |
 | [skill](skill/) | AI coding assistant plugin/skill setup guides (Claude Code, Codex CLI, MCP servers) |
 
 ## Quick Start
