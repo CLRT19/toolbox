@@ -8,6 +8,7 @@ A collection of scripts, configs, and setup guides for quickly bootstrapping a n
 |-----------|-------------|
 | [code-command-ssh](code-command-ssh/) | VS Code Remote-SSH `code` wrapper — run `code .` from any SSH terminal to open files in your local VS Code |
 | [antigravity-coredump-fix](antigravity-coredump-fix/) | Fix for Antigravity core dump crashes on SSH remote clusters |
+| [ghostty](ghostty/) | Ghostty terminal config and fixes (e.g. Kitty keyboard protocol issue on sleep/wake) |
 | [skill](skill/) | AI coding assistant plugin/skill setup guides (Claude Code, Codex CLI, MCP servers) |
 
 ## Quick Start
