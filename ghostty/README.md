@@ -12,10 +12,23 @@ Config location on macOS:
 
 When an SSH session is killed by laptop sleep, the remote shell never sends the escape sequence to disable the Kitty keyboard protocol. Ghostty stays stuck in that mode and keystrokes render as raw protocol sequences like `dw0;1:3u9;1:3u...`.
 
-**Fix:** Add to config:
+There is no Ghostty config option to disable the Kitty keyboard protocol. It is enabled by programs running inside the terminal (Claude Code, Codex, neovim, etc.) — not by the shell or Ghostty's shell integration.
+
+**Recovery:** Type `reset` blindly when it happens, or run:
 
 ```
-shell-integration-features = no-kitty-keyboard
+printf '\e[<u'
 ```
 
-This disables the Kitty keyboard protocol. The only tradeoff is losing the ability to distinguish certain key combos (e.g. Ctrl+I vs Tab, Ctrl+M vs Enter) — irrelevant for normal shell usage.
+This sends the escape sequence to pop out of Kitty keyboard mode.
+
+**Prevention:** Add an `ssh` wrapper to your **local** `~/.zshrc` (or `~/.bashrc`) that resets the terminal after SSH exits:
+
+```zsh
+ssh() {
+    command ssh "$@"
+    printf '\e[<u' 2>/dev/null  # pop kitty keyboard mode after SSH exits
+}
+```
+
+When your laptop wakes and the dead SSH process exits, the `printf` fires and cleans up Ghostty's terminal state automatically.
