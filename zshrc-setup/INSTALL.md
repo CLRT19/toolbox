@@ -6,21 +6,26 @@
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-## Step 2: Install dependencies
+## Step 2: Install CLI tools
 
 ```bash
-brew install fzf bat
+brew install fzf bat fd eza zoxide htop tldr
 
 # Set up fzf shell integration
 $(brew --prefix)/opt/fzf/install --all --no-bash --no-fish
 ```
 
-Optional (but recommended):
-```bash
-brew install zoxide    # Smarter cd with frecency tracking
-```
+| Tool | What it does |
+|---|---|
+| **fzf** | Fuzzy finder — `Ctrl+R` history, `Ctrl+T` files, `Alt+C` dirs |
+| **bat** | Syntax-highlighted `cat` + colored man pages |
+| **fd** | Faster `find` — simpler syntax, respects `.gitignore`, powers fzf |
+| **eza** | Modern `ls` — git status, icons, tree view |
+| **zoxide** | Smarter `cd` — `z dirname` jumps to frecent directories |
+| **htop** | Visual process monitor (better `top`) |
+| **tldr** | Simplified man pages with practical examples |
 
-## Step 3: Install custom plugins
+## Step 3: Install custom Oh My Zsh plugins
 
 ```bash
 ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
@@ -76,18 +81,22 @@ source ~/.zshrc
 
 | Feature | How |
 |---|---|
-| **Autosuggestions** | Grey text from history — press → to accept |
+| **Autosuggestions** | Grey text from history — press `→` to accept |
 | **Syntax highlighting** | Green = valid command, red = not found |
 | **Fuzzy history** | `Ctrl+R` — fuzzy search all history with fzf |
-| **Fuzzy file finder** | `Ctrl+T` — find files with bat preview |
-| **Directory jumping** | `z project` — jump to frecent directories |
+| **Fuzzy file finder** | `Ctrl+T` — find files with bat preview (powered by fd) |
+| **Fuzzy cd** | `Alt+C` — fuzzy directory navigation (powered by fd) |
+| **Directory jumping** | `z project` — jump to frecent directories (zoxide) |
+| **Modern ls** | `ll` shows git status + icons, `tree` built in (eza) |
+| **Fast find** | `ff pattern` — find files using fd |
 | **sudo shortcut** | Press `ESC ESC` to prepend sudo |
 | **Archive extraction** | `extract file.tar.gz` — any format |
 | **Web search** | `google "search term"` from terminal |
 | **Alias reminders** | Tells you when you could've used an alias |
 | **Colored cat** | `cat` uses bat with syntax highlighting |
 | **Colored man pages** | Man pages rendered with bat |
-| **Git aliases** | `gst`, `gco`, `gp`, `gpu`, `glog`, etc. |
-| **Smart completions** | Case-insensitive, arrow-key menu |
+| **Git aliases** | `gst`, `gco`, `gp`, `gpuo`, `glog`, `gbrclean`, etc. |
+| **Smart completions** | Case-insensitive, arrow-key menu, colored |
 | **venv helpers** | `activate` (finds nearest venv), `mkvenv` |
 | **200k history** | Shared across sessions, deduplicated, timestamped |
+| **Safety aliases** | `rm -i`, `mv -i`, `cp -i` — prevents accidental deletion |

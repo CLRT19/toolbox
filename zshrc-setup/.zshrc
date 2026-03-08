@@ -3,25 +3,26 @@
 # ============================================================
 #
 # A clean, enhanced Oh My Zsh config with:
+#   - eza (modern ls with git status, icons, tree view)
+#   - fd (faster find, powers fzf file search)
+#   - fzf (fuzzy Ctrl+R, Ctrl+T with bat preview)
+#   - bat (syntax-highlighted cat + colored man pages)
+#   - zoxide (frecency-based directory jumping)
 #   - Proper history (200k lines, dedup, shared across sessions)
 #   - Smart completions (case-insensitive, arrow-key menu)
-#   - fzf integration (fuzzy Ctrl+R, Ctrl+T with bat preview)
 #   - Useful functions (activate, mkcd, extract, etc.)
 #   - Safety aliases (rm -i, mv -i, cp -i)
-#   - Colored man pages via bat
 #
 # Prerequisites:
-#   brew install fzf bat
-#   # Run fzf install: $(brew --prefix)/opt/fzf/install
+#   brew install fzf bat fd eza zoxide htop tldr
+#   $(brew --prefix)/opt/fzf/install --all --no-bash --no-fish
 #
 # Custom plugins (install to $ZSH_CUSTOM/plugins/):
+#   ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 #   git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
 #   git clone https://github.com/zsh-users/zsh-syntax-highlighting $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
-#   git clone https://github.com/MichaelAqworter-Maki/zsh-you-should-use $ZSH_CUSTOM/plugins/you-should-use
+#   git clone https://github.com/MichaelAquilina/zsh-you-should-use $ZSH_CUSTOM/plugins/you-should-use
 #   git clone https://github.com/fdellwing/zsh-bat $ZSH_CUSTOM/plugins/zsh-bat
-#
-# Optional:
-#   brew install zoxide   # smarter cd with frecency
 #
 # ============================================================
 
@@ -37,11 +38,10 @@ HIST_STAMPS="yyyy-mm-dd"           # Timestamps in history command output
 zstyle ':omz:update' mode auto     # Auto-update oh-my-zsh without asking
 
 # --- Plugins ---
-# Built-in: git, z, sudo, extract, web-search
+# Built-in: git, sudo, extract, web-search
 # Custom:   zsh-autosuggestions, zsh-syntax-highlighting, you-should-use, zsh-bat
 plugins=(
     git                        # Git aliases (gst, gco, gp, etc.)
-    z                          # Frecency-based directory jumping (z project → cd ~/path/to/project)
     sudo                       # Press ESC twice to prepend sudo to last/current command
     extract                    # `extract file.tar.gz` — handles any archive format
     web-search                 # `google "search term"` — opens browser search
@@ -106,13 +106,22 @@ export LANG=en_US.UTF-8
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ALIASES — Navigation
+# ALIASES — Navigation (eza with fallback to ls)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-alias ll='ls -lah'
-alias la='ls -A'
-alias lt='ls -lAhtr'              # Sort by time, most recent last
-alias lS='ls -lAhSr'              # Sort by size, largest last
+if command -v eza &>/dev/null; then
+    alias ls='eza --color=auto'
+    alias ll='eza -lah --git --icons'      # Long list with git status
+    alias la='eza -a'
+    alias lt='eza -lah --sort=modified'    # Sort by time
+    alias lS='eza -lah --sort=size'        # Sort by size
+    alias tree='eza --tree --icons'        # Tree view
+else
+    alias ll='ls -lah'
+    alias la='ls -A'
+    alias lt='ls -lAhtr'
+    alias lS='ls -lAhSr'
+fi
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -136,11 +145,12 @@ alias cp='cp -i'
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # ALIASES — Git extras (beyond the git plugin)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Note: gpu, gdw, gclean are already defined by the git plugin.
+# Use different names to avoid conflicts.
 
-alias gpu='git push -u origin HEAD'            # Push new branch + set upstream
+alias gpuo='git push -u origin HEAD'           # Push new branch + set upstream to origin
 alias glog5='git log --oneline -5'             # Quick recent history
-alias gdw='git diff --word-diff'               # Word-level diff
-alias gclean='git branch --merged | grep -v "\\*\\|main\\|master" | xargs -n 1 git branch -d'  # Delete merged branches
+alias gbrclean='git branch --merged | grep -v "\\*\\|main\\|master" | xargs -n 1 git branch -d'  # Delete merged branches
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -157,8 +167,12 @@ alias pip='python3 -m pip'
 # Make directory and cd into it
 mkcd() { mkdir -p "$1" && cd "$1" }
 
-# Find files by name pattern
-ff() { find . -type f -iname "*$1*" 2>/dev/null }
+# Find files by name pattern (uses fd if available, falls back to find)
+if command -v fd &>/dev/null; then
+    ff() { fd -i "$1" }
+else
+    ff() { find . -type f -iname "*$1*" 2>/dev/null }
+fi
 
 # Show disk usage sorted by size
 duh() { du -sh "${1:-.}"/* 2>/dev/null | sort -h }
@@ -226,6 +240,13 @@ if [[ -f ~/.fzf.zsh ]]; then
     source ~/.fzf.zsh
     export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 
+    # Use fd for fzf file search (faster, respects .gitignore)
+    if command -v fd &>/dev/null; then
+        export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+        export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+    fi
+
     # Use bat for file preview in Ctrl+T
     if command -v bat &>/dev/null; then
         export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always {} 2>/dev/null | head -100'"
@@ -246,7 +267,7 @@ fi
 # if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
 # if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
 
-# zoxide (smarter cd — install with: brew install zoxide)
+# zoxide (smarter cd — provides `z` command for frecency-based directory jumping)
 if command -v zoxide &>/dev/null; then
     eval "$(zoxide init zsh)"
 fi
@@ -256,6 +277,8 @@ fi
 # LOCAL OVERRIDES
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Source a local file for machine-specific settings.
-# Use this for tokens, machine-specific aliases, etc.
+# Use this for tokens, machine-specific aliases, paths, etc.
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+true  # Ensure clean exit code
