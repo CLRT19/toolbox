@@ -10,6 +10,7 @@ A collection of scripts, configs, and setup guides for quickly bootstrapping a n
 | [antigravity-coredump-fix](antigravity-coredump-fix/) | Fix for Antigravity core dump crashes on SSH remote clusters |
 | [ghostty](ghostty/) | Ghostty terminal config and fixes (e.g. Kitty keyboard protocol issue on sleep/wake) |
 | [cluster-bashrc-setup](cluster-bashrc-setup/) | Production-ready `.bashrc` for Linux HPC clusters — replicates an Oh My Zsh experience in bash with fzf, ble.sh, Slurm aliases, and more |
+| [zshrc-setup](zshrc-setup/) | Enhanced Oh My Zsh config for macOS — fzf, bat, autosuggestions, smart completions, venv helpers, and more |
 | [skill](skill/) | AI coding assistant plugin/skill setup guides (Claude Code, Codex CLI, MCP servers) |
 
 ## Quick Start
