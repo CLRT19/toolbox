@@ -9,6 +9,7 @@ A modular collection of scripts, configs, and setup guides for bootstrapping new
 ## Structure
 
 - **`code-command-ssh/`** — VS Code Remote-SSH `code` wrapper. A bash script (`code-remote-wrapper.sh`) that lets you run `code .` from any SSH terminal (outside VS Code's integrated terminal) to open files in a local VS Code Remote-SSH window. It locates the VS Code remote CLI, probes IPC sockets with a timeout to avoid hanging on stale sockets, and forwards the command.
+- **`neovim-setup/`** — Neovim + LazyVim IDE setup guide with LSP autocomplete for Python, Rust, Go, and C/C++. Includes keybinding reference, plugin configuration, and customization examples.
 - **`skill/`** — Setup guides for AI coding assistant plugins: Claude Code plugins (Astral toolchain, Codex skill), Codex CLI GitHub skills, and MCP server configuration.
 
 ## Key Technical Details
