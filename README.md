@@ -12,6 +12,7 @@ A collection of scripts, configs, and setup guides for quickly bootstrapping a n
 | [cluster-bashrc-setup](cluster-bashrc-setup/) | Production-ready `.bashrc` for Linux HPC clusters — replicates an Oh My Zsh experience in bash with fzf, ble.sh, Slurm aliases, and more |
 | [zshrc-setup](zshrc-setup/) | Enhanced Oh My Zsh config for macOS — fzf, bat, autosuggestions, smart completions, venv helpers, and more |
 | [skill](skill/) | AI coding assistant plugin/skill setup guides (Claude Code, Codex CLI, MCP servers) |
+| [tailscale-ssh-server](tailscale-ssh-server/) | Turn an Arch laptop into a persistent Tailscale SSH server — firewall, lid-close, hardening, and common commands |
 
 ## Quick Start
 
