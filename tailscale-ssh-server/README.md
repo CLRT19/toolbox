@@ -229,7 +229,9 @@ sudo rm /etc/sudoers.d/temp-nopasswd
 
 After all changes, reboot for everything to take effect.
 
-## Fix: First SSH Connection Timeout (Idle Peer Trimming)
+## ⚠️ IMPORTANT: First SSH Connection Timeout (Idle Peer Trimming)
+
+> **Apply this fix immediately on any new Tailscale setup.** Without it, the first SSH connection after any idle period will timeout — even if the machine never sleeps. Tailscale trims peers based on traffic inactivity, not system state. This is the single most impactful fix in this guide.
 
 **Symptom:** First SSH connection after idle always times out. Second attempt works instantly. Logs show `idle peer now active, reconfiguring WireGuard` and `configuring userspace WireGuard config (with 0/N peers)`.
 
